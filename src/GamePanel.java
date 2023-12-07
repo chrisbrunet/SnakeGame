@@ -46,17 +46,21 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 	
 	public void draw(Graphics g) {
-		g.setColor(Color.RED);
-		g.fillOval(apple.getX_coord(), apple.getY_coord(), BLOCK_SIZE, BLOCK_SIZE);
-		
-		for(int i = 0; i < snake.getBodyParts(); i++) {
-			if(i == 0) {
-				g.setColor(Color.GREEN);
-				g.fillRect(snake.getX()[i], snake.getY()[i], BLOCK_SIZE, BLOCK_SIZE);
-			} else {
-				g.setColor(Color.MAGENTA);
-				g.fillRect(snake.getX()[i], snake.getY()[i], BLOCK_SIZE, BLOCK_SIZE);
+		if(running) {
+			g.setColor(Color.RED);
+			g.fillOval(apple.getX_coord(), apple.getY_coord(), BLOCK_SIZE, BLOCK_SIZE);
+			
+			for(int i = 0; i < snake.getBodyParts(); i++) {
+				if(i == 0) {
+					g.setColor(Color.ORANGE);
+					g.fillRect(snake.getX()[i], snake.getY()[i], BLOCK_SIZE, BLOCK_SIZE);
+				} else {
+					g.setColor(Color.GREEN);
+					g.fillRect(snake.getX()[i], snake.getY()[i], BLOCK_SIZE, BLOCK_SIZE);
+				}
 			}
+		} else {
+			gameOver(g);
 		}
 	}
 	
@@ -74,7 +78,8 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 	
 	public void gameOver(Graphics g) {
-		
+		g.setColor(Color.RED);
+		g.drawString("GAME OVER", WIDTH/2, HEIGHT/2);
 	}
 
 	@Override

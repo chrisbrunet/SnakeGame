@@ -11,10 +11,12 @@ public class Snake {
 	public Snake(int width, int height, int numBlocks, int blockSize) {
 		this.width = width;
 		this.height = height;
-		bodyParts = 3;
+		this.blockSize = blockSize;
+		bodyParts = 1;
 		x = new int[numBlocks];
 		y = new int[numBlocks];
-		this.blockSize = blockSize;
+		x[0] = width / 2;
+		y[0] = height / 2;
 	}
 	
 	public void move(char direction) {
@@ -48,11 +50,11 @@ public class Snake {
 			return true;
 		}
 		
-//		for(int i = bodyParts; i > 0; i--) {
-//			if(x[i] == x[0] && y[i] == y[0]) {
-//				return true;
-//			}
-//		}
+		for(int i = 1; i < bodyParts; i++) {
+			if(x[i] == x[0] && y[i] == y[0]) {
+				return true;
+			}
+		}
 		
 		return false;
 	}
