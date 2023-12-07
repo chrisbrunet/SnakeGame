@@ -1,12 +1,16 @@
 
 public class Snake {
 	
+	private int width;
+	private int height;
 	private int blockSize;
 	private int bodyParts;
 	private int x[];
 	private int y[];
 	
-	public Snake(int numBlocks, int blockSize) {
+	public Snake(int width, int height, int numBlocks, int blockSize) {
+		this.width = width;
+		this.height = height;
 		bodyParts = 3;
 		x = new int[numBlocks];
 		y = new int[numBlocks];
@@ -33,6 +37,28 @@ public class Snake {
 			x[0] = x[0] + blockSize;
 			break;
 		}
+	}
+	
+	public boolean fault() {
+		if(x[0] == width || x[0] < 0) {
+			return true;
+		} 
+		
+		if(y[0] == height || y[0] < 0) {
+			return true;
+		}
+		
+//		for(int i = bodyParts; i > 0; i--) {
+//			if(x[i] == x[0] && y[i] == y[0]) {
+//				return true;
+//			}
+//		}
+		
+		return false;
+	}
+	
+	public void eatApple() {
+		bodyParts++;
 	}
 	
 	public int getBodyParts() {

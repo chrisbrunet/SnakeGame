@@ -13,7 +13,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	
 	static final int WIDTH = 600;
 	static final int HEIGHT = 600;
-	static final int DELAY = 200;
+	static final int DELAY = 150;
 	static final int BLOCK_SIZE = 25;
 	static final int NUM_BLOCKS = (WIDTH * HEIGHT) / BLOCK_SIZE;
 	boolean running = false;
@@ -35,7 +35,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	public void startGame() {
 		running = true;
 		apple = new Apple(WIDTH, HEIGHT, BLOCK_SIZE);
-		snake = new Snake(NUM_BLOCKS, BLOCK_SIZE);
+		snake = new Snake(WIDTH, HEIGHT, NUM_BLOCKS, BLOCK_SIZE);
 		timer = new Timer(DELAY, this);
 		timer.start();
 	}
@@ -61,11 +61,16 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 	
 	public void checkApple() {
-		
+		if(snake.getX()[0] == apple.getX_coord() && snake.getY()[0] == apple.getY_coord()){
+			apple = new Apple(WIDTH, HEIGHT, BLOCK_SIZE);
+			snake.eatApple();
+		}
 	}
 	
 	public void checkFault() {
-		
+		if(snake.fault()) {
+			running = false;
+		}
 	}
 	
 	public void gameOver(Graphics g) {
@@ -89,17 +94,25 @@ public class GamePanel extends JPanel implements ActionListener {
 		public void keyPressed(KeyEvent e) {
 			switch(e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
-				direction = 'L';
-				break;
+				if(direction != 'R') {
+					direction = 'L';
+					break;
+				}
 			case KeyEvent.VK_RIGHT:
-				direction = 'R';
-				break;
+				if(direction != 'L') {
+					direction = 'R';
+					break;
+				}
 			case KeyEvent.VK_UP:
-				direction = 'U';
-				break;
+				if(direction != 'D') {
+					direction = 'U';
+					break;
+				}
 			case KeyEvent.VK_DOWN:
-				direction = 'D';
-				break;
+				if(direction != 'U') {
+					direction = 'D';
+					break;
+				}
 			}
 	
 		}
