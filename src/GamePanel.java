@@ -3,6 +3,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -10,12 +13,14 @@ public class GamePanel extends JPanel implements ActionListener {
 	
 	static final int WIDTH = 600;
 	static final int HEIGHT = 600;
-	static final int DELAY = 75;
+	static final int DELAY = 200;
 	static final int BLOCK_SIZE = 25;
 	static final int NUM_BLOCKS = (WIDTH * HEIGHT) / BLOCK_SIZE;
 	boolean running = false;
+	char direction;
 	
 	Timer timer;
+	Snake snake;
 	Apple apple;
 	
 	
@@ -30,6 +35,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	public void startGame() {
 		running = true;
 		apple = new Apple(WIDTH, HEIGHT, BLOCK_SIZE);
+		snake = new Snake(NUM_BLOCKS, BLOCK_SIZE);
 		timer = new Timer(DELAY, this);
 		timer.start();
 	}
@@ -42,13 +48,19 @@ public class GamePanel extends JPanel implements ActionListener {
 	public void draw(Graphics g) {
 		g.setColor(Color.RED);
 		g.fillOval(apple.getX_coord(), apple.getY_coord(), BLOCK_SIZE, BLOCK_SIZE);
-	}
 		
-	public void move() {
-		
+		for(int i = 0; i < snake.getBodyParts(); i++) {
+			if(i == 0) {
+				g.setColor(Color.GREEN);
+				g.fillRect(snake.getX()[i], snake.getY()[i], BLOCK_SIZE, BLOCK_SIZE);
+			} else {
+				g.setColor(Color.MAGENTA);
+				g.fillRect(snake.getX()[i], snake.getY()[i], BLOCK_SIZE, BLOCK_SIZE);
+			}
+		}
 	}
 	
-	public void checkTarget() {
+	public void checkApple() {
 		
 	}
 	
@@ -62,8 +74,34 @@ public class GamePanel extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(running) {
+			snake.move(direction);
+			checkApple();
+			checkFault();
+		}
+		repaint();
 	}
 
+
+	public class MyKeyAdapter extends KeyAdapter {
+		
+		@Override
+		public void keyPressed(KeyEvent e) {
+			switch(e.getKeyCode()) {
+			case KeyEvent.VK_LEFT:
+				direction = 'L';
+				break;
+			case KeyEvent.VK_RIGHT:
+				direction = 'R';
+				break;
+			case KeyEvent.VK_UP:
+				direction = 'U';
+				break;
+			case KeyEvent.VK_DOWN:
+				direction = 'D';
+				break;
+			}
+	
+		}
+	}
 }
