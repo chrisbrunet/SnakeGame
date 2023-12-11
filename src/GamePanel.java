@@ -1,11 +1,13 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -18,6 +20,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	static final int NUM_BLOCKS = (WIDTH * HEIGHT) / BLOCK_SIZE;
 	boolean running = false;
 	char direction;
+	int  score = 0;
 	
 	Timer timer;
 	Snake snake;
@@ -47,7 +50,14 @@ public class GamePanel extends JPanel implements ActionListener {
 	
 	public void draw(Graphics g) {
 		if(running) {
+			
+			g.setFont(new Font("Comic Sans MS", 1, 20));
+			String scoreText = "Score: " + score;
+			int scoreWidth = g.getFontMetrics().stringWidth(scoreText);
+			
 			g.setColor(Color.RED);
+			g.drawString(scoreText, WIDTH/2 - scoreWidth/2, HEIGHT - 2 * BLOCK_SIZE);
+			
 			g.fillOval(apple.getX_coord(), apple.getY_coord(), BLOCK_SIZE, BLOCK_SIZE);
 			
 			for(int i = 0; i < snake.getBodyParts(); i++) {
@@ -60,7 +70,7 @@ public class GamePanel extends JPanel implements ActionListener {
 				}
 			}
 		} else {
-			gameOver(g);
+			gameOver(g); 
 		}
 	}
 	
@@ -68,6 +78,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		if(snake.getX()[0] == apple.getX_coord() && snake.getY()[0] == apple.getY_coord()){
 			apple = new Apple(WIDTH, HEIGHT, BLOCK_SIZE);
 			snake.eatApple();
+			score++;
 		}
 	}
 	
@@ -78,8 +89,28 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 	
 	public void gameOver(Graphics g) {
-		g.setColor(Color.RED);
-		g.drawString("GAME OVER", WIDTH/2, HEIGHT/2);
+		String gameOverText = "Game Over";
+		String finalScoreText = "Final Score: " + score;
+		
+		g.setFont(new Font("Comic Sans MS", 1, 20));
+		int fontHeight = g.getFontMetrics().getHeight();
+		int gameOverWidth = g.getFontMetrics().stringWidth(gameOverText);
+		int finalScoreWidth = g.getFontMetrics().stringWidth(finalScoreText);
+		
+		int rectW = Math.max(gameOverWidth, finalScoreWidth) + 50;
+		int rectH = fontHeight * 2 + 50;
+		int rectX = WIDTH/2 - rectW/2;
+		int rectY = 100;
+		
+    	g.setColor(Color.ORANGE);
+		g.drawRoundRect(rectX, rectY, rectW, rectH, 10, 10);
+    	g.setColor(Color.RED);
+		g.drawString(gameOverText, rectX + (rectW - gameOverWidth) / 2, 
+				rectY + rectH / 2 - fontHeight / 2);
+    	g.setColor(Color.GREEN);
+		g.drawString(finalScoreText, rectX + (rectW - finalScoreWidth) / 2, 
+				rectY + rectH / 2 + fontHeight);
+		
 	}
 
 	@Override
