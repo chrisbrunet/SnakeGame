@@ -13,34 +13,53 @@ import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener {
 	
-	static final int WIDTH = 600;
-	static final int HEIGHT = 600;
-	static final int DELAY = 150;
-	static final int BLOCK_SIZE = 25;
-	static final int NUM_BLOCKS = (WIDTH * HEIGHT) / BLOCK_SIZE;
-	boolean running = false;
-	char direction;
-	int  score = 0;
+	private static final long serialVersionUID = 1L;
+	private static final int WIDTH = 600;
+	private static final int HEIGHT = 600;
+	private static final int DELAY = 150;
+	private static final int BLOCK_SIZE = 25;
+	private static final int NUM_BLOCKS = (WIDTH * HEIGHT) / BLOCK_SIZE;
+	private boolean running = false;
+	private char direction;
+	private int score;
 	
-	Timer timer;
-	Snake snake;
-	Apple apple;
+	private Timer timer;
+	private Snake snake;
+	private Apple apple;
+	
+	private GameFrame frame;
+	private JButton newGameButton;
 	
 	
-	public GamePanel() {
+	public GamePanel(GameFrame frame) {
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		this.setBackground(Color.DARK_GRAY);
 		this.setFocusable(true);
 		this.addKeyListener(new MyKeyAdapter());
-		startGame();
+		
+		newGameButton = new JButton("New Game");
+		newGameButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.startGame();
+            }
+        });
+        this.add(newGameButton);
+        newGameButton.setVisible(false);
 	}
 	
 	public void startGame() {
-		running = true;
-		apple = new Apple(WIDTH, HEIGHT, BLOCK_SIZE);
+		direction = 'O';
+        newGameButton.setVisible(false);
+		score = 0;
+        running = true;		
+        apple = new Apple(WIDTH, HEIGHT, BLOCK_SIZE);
 		snake = new Snake(WIDTH, HEIGHT, NUM_BLOCKS, BLOCK_SIZE);
-		timer = new Timer(DELAY, this);
-		timer.start();
+		if (timer != null) {
+            timer.stop();
+            timer = null;
+        }
+        timer = new Timer(DELAY, this);
+        timer.start();
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -50,25 +69,15 @@ public class GamePanel extends JPanel implements ActionListener {
 	
 	public void draw(Graphics g) {
 		if(running) {
-			
-			g.setFont(new Font("Comic Sans MS", 1, 20));
 			String scoreText = "Score: " + score;
+
+			g.setFont(new Font("Comic Sans MS", 1, 20));
 			int scoreWidth = g.getFontMetrics().stringWidth(scoreText);
-			
 			g.setColor(Color.RED);
 			g.drawString(scoreText, WIDTH/2 - scoreWidth/2, HEIGHT - 2 * BLOCK_SIZE);
 			
-			g.fillOval(apple.getX_coord(), apple.getY_coord(), BLOCK_SIZE, BLOCK_SIZE);
-			
-			for(int i = 0; i < snake.getBodyParts(); i++) {
-				if(i == 0) {
-					g.setColor(Color.ORANGE);
-					g.fillRect(snake.getX()[i], snake.getY()[i], BLOCK_SIZE, BLOCK_SIZE);
-				} else {
-					g.setColor(Color.GREEN);
-					g.fillRect(snake.getX()[i], snake.getY()[i], BLOCK_SIZE, BLOCK_SIZE);
-				}
-			}
+			apple.drawApple(g);			
+			snake.drawSnake(g);
 		} else {
 			gameOver(g); 
 		}
@@ -89,6 +98,14 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 	
 	public void gameOver(Graphics g) {
+		newGameButton.setSize(100, 20);
+		newGameButton.setLocation(WIDTH / 2 - newGameButton.getWidth() / 2, HEIGHT / 2);
+		newGameButton.setVisible(true);
+		
+		if (timer != null) {
+            timer.stop();
+        }
+		
 		String gameOverText = "Game Over";
 		String finalScoreText = "Final Score: " + score;
 		
@@ -110,7 +127,6 @@ public class GamePanel extends JPanel implements ActionListener {
     	g.setColor(Color.GREEN);
 		g.drawString(finalScoreText, rectX + (rectW - finalScoreWidth) / 2, 
 				rectY + rectH / 2 + fontHeight);
-		
 	}
 
 	@Override

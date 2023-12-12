@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Graphics;
 
 public class Snake {
 	
@@ -17,6 +19,18 @@ public class Snake {
 		y = new int[numBlocks];
 		x[0] = width / 2;
 		y[0] = height / 2;
+	}
+	
+	public void drawSnake(Graphics g) {
+		for(int i = 0; i < bodyParts; i++) {
+			if(i == 0) {
+				g.setColor(Color.ORANGE);
+				g.fillRect(x[i], y[i], blockSize, blockSize);
+			} else {
+				g.setColor(Color.GREEN);
+				g.fillRect(x[i], y[i], blockSize, blockSize);
+			}
+		}
 	}
 	
 	public void move(char direction) {
