@@ -67,22 +67,29 @@ public class MenuPanel extends JPanel {
 	}
 	
 	public void draw(Graphics g) {
+		String title = "SNAKE GAME";
+		g.setFont(new Font("Comic Sans MS", 30, 50));
+		g.setColor(Color.MAGENTA);
+		int titleWidth = g.getFontMetrics().stringWidth(title);
+		g.drawString(title, WIDTH / 2 - titleWidth / 2, 150);
+		
 		startGameButton.setSize(250, 50);
-	    startGameButton.setLocation(WIDTH / 2 - startGameButton.getWidth() / 2, HEIGHT / 2);
+	    startGameButton.setLocation(WIDTH / 2 - startGameButton.getWidth() / 2, HEIGHT / 3);
 	    startGameButton.setFont(new Font("Comic Sans MS", 30, 30));
 	    
-	    easy.setSize(100, 20);
-	    easy.setLocation(WIDTH / 2 - startGameButton.getWidth() / 2, HEIGHT / 2 + 50);
+	    easy.setSize(75, 20);
+	    easy.setLocation(WIDTH / 2 - startGameButton.getWidth() / 2, HEIGHT / 3 + 60);
 	    easy.setFont(new Font("Comic Sans MS", 15, 15));
 	    easy.setForeground(Color.GREEN);
 	    
 	    medium.setSize(100, 20);
-	    medium.setLocation(WIDTH / 2 - startGameButton.getWidth() / 2, HEIGHT / 2 + 70);
+	    medium.setLocation(WIDTH / 2 - startGameButton.getWidth() / 2 + easy.getWidth(), HEIGHT / 3 + 60);
 	    medium.setFont(new Font("Comic Sans MS", 15, 15));
 	    medium.setForeground(Color.ORANGE);
 	    
 	    hard.setSize(100, 20);
-	    hard.setLocation(WIDTH / 2 - startGameButton.getWidth() / 2, HEIGHT / 2 + 90);
+	    hard.setLocation(WIDTH / 2 - startGameButton.getWidth() / 2 + easy.getWidth() + medium.getWidth(), 
+	    		HEIGHT / 3 + 60);
 	    hard.setFont(new Font("Comic Sans MS", 15, 15));
 	    hard.setForeground(Color.RED);
 	}
