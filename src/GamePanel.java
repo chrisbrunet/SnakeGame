@@ -16,9 +16,9 @@ public class GamePanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 600;
-	private static final int DELAY = 150;
 	private static final int BLOCK_SIZE = 25;
 	private static final int NUM_BLOCKS = (WIDTH * HEIGHT) / BLOCK_SIZE;
+	private int delay = 150;
 	private boolean running = false;
 	private char direction;
 	private int score;
@@ -27,8 +27,8 @@ public class GamePanel extends JPanel implements ActionListener {
 	private Snake snake;
 	private Apple apple;
 	
-	private GameFrame frame;
 	private JButton newGameButton;
+	private JButton menuButton;
 	
 	
 	public GamePanel(GameFrame frame) {
@@ -37,17 +37,27 @@ public class GamePanel extends JPanel implements ActionListener {
 		this.setFocusable(true);
 		this.addKeyListener(new MyKeyAdapter());
 		
-		newGameButton = new JButton("New Game");
+		newGameButton = new JButton("Play Again");
 		newGameButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                frame.startGame();
+                frame.showGamePanel(delay);
             }
         });
         this.add(newGameButton);
         newGameButton.setVisible(false);
+        
+        menuButton = new JButton("Main Menu");
+        menuButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.showMenuPanel();
+            }
+        });
+        this.add(menuButton);
+        menuButton.setVisible(false);
 	}
 	
-	public void startGame() {
+	public void startGame(int delay) {
+		this.delay = delay;
 		direction = 'O';
         newGameButton.setVisible(false);
 		score = 0;
@@ -58,7 +68,7 @@ public class GamePanel extends JPanel implements ActionListener {
             timer.stop();
             timer = null;
         }
-        timer = new Timer(DELAY, this);
+        timer = new Timer(this.delay, this);
         timer.start();
 	}
 	
@@ -102,6 +112,10 @@ public class GamePanel extends JPanel implements ActionListener {
 		newGameButton.setLocation(WIDTH / 2 - newGameButton.getWidth() / 2, HEIGHT / 2);
 		newGameButton.setVisible(true);
 		
+		menuButton.setSize(100, 20);
+		menuButton.setLocation(WIDTH / 2 - newGameButton.getWidth() / 2, HEIGHT / 2 + 30);
+		menuButton.setVisible(true);
+		
 		if (timer != null) {
             timer.stop();
         }
@@ -128,7 +142,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		g.drawString(finalScoreText, rectX + (rectW - finalScoreWidth) / 2, 
 				rectY + rectH / 2 + fontHeight);
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(running) {

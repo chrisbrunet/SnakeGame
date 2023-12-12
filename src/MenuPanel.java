@@ -1,34 +1,64 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
-public class MenuPanel extends JPanel implements ActionListener {
+public class MenuPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 600;
-	JButton startGameButton;
-
-    private GameFrame frame;
+	
+	private JButton startGameButton;
+	private JRadioButton easy, medium, hard;
+	private ButtonGroup buttons;
+	
+	private int delay;
 
 	public MenuPanel(GameFrame frame) {
-		this.frame = frame;
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setBackground(Color.DARK_GRAY);
         this.setFocusable(true);
+               
+        easy = new JRadioButton("Easy");
+        this.add(easy);
         
-		startGameButton = new JButton("Start Game");
+        medium = new JRadioButton("Medium");
+        this.add(medium);
+        
+        hard = new JRadioButton("Hard");
+        this.add(hard);
+        
+        buttons = new ButtonGroup();
+        buttons.add(easy);
+        buttons.add(medium);
+        buttons.add(hard);
+        
+        easy.setSelected(true);
+
+        startGameButton = new JButton("Start Game");
         startGameButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                frame.startGame();
+            	if(easy.isSelected()) {
+            		delay = 150;
+            	} else if(medium.isSelected()) {
+            		delay = 100;
+            	} else {
+            		delay = 50;
+            	}
+            	
+            	frame.showGamePanel(delay);
             }
         });
         this.add(startGameButton);
+        
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -37,15 +67,24 @@ public class MenuPanel extends JPanel implements ActionListener {
 	}
 	
 	public void draw(Graphics g) {
-		startGameButton.setSize(100, 20);
+		startGameButton.setSize(250, 50);
 	    startGameButton.setLocation(WIDTH / 2 - startGameButton.getWidth() / 2, HEIGHT / 2);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == startGameButton) {
-			System.out.println("button clicked");
-		}		
+	    startGameButton.setFont(new Font("Comic Sans MS", 30, 30));
+	    
+	    easy.setSize(100, 20);
+	    easy.setLocation(WIDTH / 2 - startGameButton.getWidth() / 2, HEIGHT / 2 + 50);
+	    easy.setFont(new Font("Comic Sans MS", 15, 15));
+	    easy.setForeground(Color.GREEN);
+	    
+	    medium.setSize(100, 20);
+	    medium.setLocation(WIDTH / 2 - startGameButton.getWidth() / 2, HEIGHT / 2 + 70);
+	    medium.setFont(new Font("Comic Sans MS", 15, 15));
+	    medium.setForeground(Color.ORANGE);
+	    
+	    hard.setSize(100, 20);
+	    hard.setLocation(WIDTH / 2 - startGameButton.getWidth() / 2, HEIGHT / 2 + 90);
+	    hard.setFont(new Font("Comic Sans MS", 15, 15));
+	    hard.setForeground(Color.RED);
 	}
 
 }

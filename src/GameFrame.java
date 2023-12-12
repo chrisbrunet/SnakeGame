@@ -10,33 +10,43 @@ public class GameFrame extends JFrame {
         this.setTitle("Snake");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
-        
-        menu = new MenuPanel(this);
-        this.add(menu);
-        
-        game = new GamePanel(this);
-        
-        this.pack();
-        this.setVisible(true);
         this.setLocationRelativeTo(null);
     }
     
-    public void startGame() {
-        this.remove(menu);
-        this.add(game);
-        game.requestFocusInWindow();
-        this.pack();
-        game.startGame();
+    public void showMenuPanel() {
+    	if(game != null) {
+    		this.remove(game);
+    		game = null;
+    	}
+    	
+    	menu = new MenuPanel(this);
+    	this.add(menu);
+    	menu.requestFocusInWindow();
+    	this.validate();
+        this.repaint(); 
+    	this.pack();
+    	this.setVisible(true);
     }
     
-    public void newGame() {
-    	 this.remove(game);
-         game = new GamePanel(this);
-         this.add(game);
-         game.requestFocusInWindow();
-         this.pack();
-         game.startGame();
-         game.setVisible(true);
+    public void showGamePanel(int delay) {
+    	if(game != null) {
+    		this.remove(game);
+    		game = null;
+    	}
+    	
+    	if(menu != null) {
+    		this.remove(menu);
+    		menu = null;
+    	}
+    	
+    	game = new GamePanel(this);
+        this.add(game);
+        game.requestFocusInWindow();
+        this.validate();
+        this.repaint(); 
+        this.pack();
+    	this.setVisible(true);
+        game.startGame(delay);
     }
 	
 }
