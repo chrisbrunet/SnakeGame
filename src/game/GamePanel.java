@@ -109,12 +109,14 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 	
 	public void gameOver(Graphics g) {
-		newGameButton.setSize(100, 20);
+		newGameButton.setSize(150, 40);
+		newGameButton.setFont(new Font("Comic Sans MS", 20, 20));
 		newGameButton.setLocation(WIDTH / 2 - newGameButton.getWidth() / 2, HEIGHT / 2);
 		newGameButton.setVisible(true);
 		
-		menuButton.setSize(100, 20);
-		menuButton.setLocation(WIDTH / 2 - newGameButton.getWidth() / 2, HEIGHT / 2 + 30);
+		menuButton.setSize(150, 40);
+		menuButton.setFont(new Font("Comic Sans MS", 20, 20));
+		menuButton.setLocation(WIDTH / 2 - newGameButton.getWidth() / 2, HEIGHT / 2 + 40);
 		menuButton.setVisible(true);
 		
 		if (timer != null) {

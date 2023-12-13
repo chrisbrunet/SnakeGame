@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -17,9 +18,10 @@ public class MenuPanel extends JPanel {
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 600;
 	
-	private JButton startGameButton;
+	private JButton startGameButton, exitButton;
 	private JRadioButton easy, medium, hard;
 	private ButtonGroup buttons;
+	private ImageIcon icon;
 	
 	private int delay;
 
@@ -27,6 +29,8 @@ public class MenuPanel extends JPanel {
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setBackground(Color.DARK_GRAY);
         this.setFocusable(true);
+        
+        icon = new ImageIcon("snakeIcon.png", "Snake Logo");
                
         easy = new JRadioButton("Easy");
         this.add(easy);
@@ -60,11 +64,21 @@ public class MenuPanel extends JPanel {
         });
         this.add(startGameButton);
         
+        exitButton = new JButton("Exit");
+        exitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	System.exit(0);
+            }
+        });
+        this.add(exitButton);
+        
 	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		draw(g);
+		
+		g.drawImage(icon.getImage(), WIDTH / 2 - 50, HEIGHT / 2 + 50, 100, 100, this);
 	}
 	
 	public void draw(Graphics g) {
@@ -93,6 +107,15 @@ public class MenuPanel extends JPanel {
 	    		HEIGHT / 3 + 60);
 	    hard.setFont(new Font("Comic Sans MS", 15, 15));
 	    hard.setForeground(Color.RED);
+	    
+	    exitButton.setSize(150, 40);
+	    exitButton.setLocation(WIDTH - exitButton.getWidth() - 20, HEIGHT - 20 - exitButton.getHeight());
+	    exitButton.setFont(new Font("Comic Sans MS", 15, 15));
+	    
+	    String author = "Created by Chris Brunet";
+		g.setFont(new Font("Comic Sans MS", 30, 15));
+		g.setColor(Color.WHITE);
+		g.drawString(author, 20, HEIGHT - 20);
 	}
 
 }
