@@ -7,6 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -23,6 +27,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	private boolean running = false;
 	private char direction;
 	private int score;
+	private int highScore = 0;
 	
 	private Timer timer;
 	private Snake snake;
@@ -55,6 +60,8 @@ public class GamePanel extends JPanel implements ActionListener {
         });
         this.add(menuButton);
         menuButton.setVisible(false);
+        
+        highScore = loadHighScore();
 	}
 	
 	public void startGame(int delay) {
@@ -84,8 +91,19 @@ public class GamePanel extends JPanel implements ActionListener {
 
 			g.setFont(new Font("Comic Sans MS", 1, 20));
 			int scoreWidth = g.getFontMetrics().stringWidth(scoreText);
-			g.setColor(Color.RED);
-			g.drawString(scoreText, WIDTH/2 - scoreWidth/2, HEIGHT - 2 * BLOCK_SIZE);
+			if (score <= highScore) {
+				g.setColor(Color.RED);
+			} else {
+				g.setColor(Color.GREEN);
+			}
+			g.drawString(scoreText, WIDTH/2 - scoreWidth/2, HEIGHT - 3 * BLOCK_SIZE);
+			
+			String highScoreText = " High Score: " + highScore;
+
+			g.setFont(new Font("Comic Sans MS", 1, 20));
+			int highScoreWidth = g.getFontMetrics().stringWidth(highScoreText);
+			g.setColor(Color.ORANGE);
+			g.drawString(highScoreText, WIDTH/2 - highScoreWidth/2, HEIGHT - 2 * BLOCK_SIZE);
 			
 			apple.drawApple(g);			
 			snake.drawSnake(g);
@@ -109,6 +127,12 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 	
 	public void gameOver(Graphics g) {
+		
+		if (score > highScore) {
+	        highScore = score;
+	        saveHighScore(highScore);
+	    }
+		
 		newGameButton.setSize(150, 40);
 		newGameButton.setFont(new Font("Comic Sans MS", 20, 20));
 		newGameButton.setLocation(WIDTH / 2 - newGameButton.getWidth() / 2, HEIGHT / 2);
@@ -125,25 +149,37 @@ public class GamePanel extends JPanel implements ActionListener {
 		
 		String gameOverText = "Game Over";
 		String finalScoreText = "Final Score: " + score;
+		String highScoreText = "High Score: " + highScore;
+		
+		g.setFont(new Font("Comic Sans MS", 30, 50));
+		int gameOverWidth = g.getFontMetrics().stringWidth(gameOverText);
+    	g.setColor(Color.MAGENTA);
+		g.drawString(gameOverText, WIDTH / 2 - gameOverWidth / 2, 150);
+		
 		
 		g.setFont(new Font("Comic Sans MS", 1, 20));
 		int fontHeight = g.getFontMetrics().getHeight();
-		int gameOverWidth = g.getFontMetrics().stringWidth(gameOverText);
 		int finalScoreWidth = g.getFontMetrics().stringWidth(finalScoreText);
-		
-		int rectW = Math.max(gameOverWidth, finalScoreWidth) + 50;
-		int rectH = fontHeight * 2 + 50;
+		int highScoreWidth = g.getFontMetrics().stringWidth(highScoreText);
+
+		int rectW = Math.max(highScoreWidth, finalScoreWidth) + 50;
+		int rectH = fontHeight * 2 + 30;
 		int rectX = WIDTH/2 - rectW/2;
-		int rectY = 100;
+		int rectY = 175;
 		
     	g.setColor(Color.ORANGE);
 		g.drawRoundRect(rectX, rectY, rectW, rectH, 10, 10);
-    	g.setColor(Color.RED);
-		g.drawString(gameOverText, rectX + (rectW - gameOverWidth) / 2, 
-				rectY + rectH / 2 - fontHeight / 2);
-    	g.setColor(Color.GREEN);
+		if (score <= highScore) {
+			g.setColor(Color.RED);
+		} else {
+			g.setColor(Color.GREEN);
+		}
 		g.drawString(finalScoreText, rectX + (rectW - finalScoreWidth) / 2, 
-				rectY + rectH / 2 + fontHeight);
+				rectY + rectH / 2 - fontHeight / 3);
+		
+		g.setColor(Color.ORANGE);
+		g.drawString(highScoreText, rectX + (rectW - highScoreWidth) / 2, 
+				rectY + rectH / 2 + fontHeight * 2 / 3);
 	}
 	
 	@Override
@@ -155,7 +191,31 @@ public class GamePanel extends JPanel implements ActionListener {
 		}
 		repaint();
 	}
-
+	
+	private void saveHighScore(int score) {
+	    try {
+	    	FileWriter writer = new FileWriter("highscore.txt");
+	        writer.write(Integer.toString(score));
+	        writer.close();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	private int loadHighScore() {
+	    try {
+	        File file = new File("highscore.txt");
+	        if (file.exists()) {
+	            Scanner scanner = new Scanner(file);
+	            int score = scanner.nextInt();
+	            scanner.close();
+	            return score;
+	        }
+	    } catch (IOException e) {
+	        e.printStackTrace(); 
+	    }
+	    return 0;
+	}
 
 	public class MyKeyAdapter extends KeyAdapter {
 		
