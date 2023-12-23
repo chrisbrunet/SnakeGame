@@ -169,6 +169,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		
     	g.setColor(Color.ORANGE);
 		g.drawRoundRect(rectX, rectY, rectW, rectH, 10, 10);
+		
 		if (score <= highScore) {
 			g.setColor(Color.RED);
 		} else {
@@ -194,7 +195,8 @@ public class GamePanel extends JPanel implements ActionListener {
 	
 	private void saveHighScore(int score) {
 	    try {
-	    	FileWriter writer = new FileWriter("highscore.txt");
+	        String filePath = System.getProperty("user.dir") + "/highscore.txt";
+	    	FileWriter writer = new FileWriter(filePath);
 	        writer.write(Integer.toString(score));
 	        writer.close();
 	    } catch (IOException e) {
@@ -204,7 +206,8 @@ public class GamePanel extends JPanel implements ActionListener {
 	
 	private int loadHighScore() {
 	    try {
-	        File file = new File("highscore.txt");
+	        String filePath = System.getProperty("user.dir") + "/highscore.txt";
+	        File file = new File(filePath);
 	        if (file.exists()) {
 	            Scanner scanner = new Scanner(file);
 	            int score = scanner.nextInt();
